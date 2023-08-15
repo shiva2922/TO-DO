@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="maindiv">
+    <input type="text" id="textbox">          <button id="btn1">Add</button>
+    <div id="outputdiv"></div>
+</div>
+
+    <script>
+
+        let textbox=document.querySelector("#textbox");
+        let btn1 =document.querySelector("#btn1");
+        let outputdiv=document.querySelector("#outputdiv");
+
+        let tasks=[];
+        let count=1;
+        btn1.addEventListener("click",function(){
+            let obj={};
+            
+            obj.title=textbox.value;
+            if(textbox.value==" "  ||  textbox.value.trim()==""){
+                alert("enter some value");
+            }
+            else{
+            obj.id=count;
+            obj.status="pending";
+            tasks.push(obj);
+            AddToUI(obj);
+
+            addtolocalStorage();
+            console.log(tasks);
+            textbox.value=" ";
+            
+            }
+        })
+
+
+        function AddToUI(obj){
+            count++;
+            let div=document.createElement("div");
+            let span=document.createElement("span");
+            span.innerHTML=obj.title;
+
+            let chk=document.createElement("input");
+          chk.setAttribute("type","checkbox");
+
+          chk.addEventListener("click",function(){
+            if(chk.checked==true){
+                obj.status="completed";
+                span.style.textDecoration="line-through";
+            }
+            else{
+                obj.status="pending";
+                span.style.textDecoration="none";
+            }
+            addtolocalStorage();
+            console.log(tasks);
+
+          })
+
+          let btn=document.createElement("button");
+          btn.innerHTML="delete";
+          btn.addEventListener("click",function(){
+            tasks=tasks.filter(function(i){
+                if(i.id!=obj.id){
+                    return true;
+                }
+            })
+            div.remove();
+            addtolocalStorage();
+            console.log(tasks);
+
+          })
+
+  
+   div.append(chk);
+   div.append(span);
+   div.append(btn);
+   outputdiv.append(div);
+
+        }
+
+        function addtolocalStorage(){
+          //  console.log("function call");
+            localStorage.setItem("mytasks",JSON.stringify(tasks));
+           // console.log( localStorage.getItem("mytasks"));
+           if(localStorage.getItem("mytasks")){
+           var data=JSON.parse(localStorage.getItem("mytasks"));
+           data.forEach(function(i){
+            console.log("This is get by getItem ",i);
+           })
+        }
+        }
+
+        // function getlocalStorage(){
+        //     if(localStorage.getItem("mytasks"))
+        //     tasks=JSON.parse(localStorage.getItem(mytaks));
+        //     tasks.forEach(function(item){
+        //         AddToUI(item);
+        //     })
+        // }
+
+        // getlocalStorage();
+    </script>
+</body>
+</html>
